@@ -15,5 +15,6 @@ require('laravel-elixir-vue-2');
 
 
 elixir(function(mix) {
-    mix.scripts(['../../../bower_components/angular/angular.min.js', 'app.js'], 'public/js/app.js');
+    mix.scripts(['../../../bower_components/angular/angular.js',
+                 'app.js'], 'public/js/app.js');
 });

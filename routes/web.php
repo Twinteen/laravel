@@ -14,3 +14,20 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/testAngular', function () {
+    Blade::setContentTags('<%', '%>');        // for variables and all things Blade
+    Blade::setEscapedContentTags('<%%', '%%>');   // for escaped data
+    return View::make('angular/firstTest');
+    //return view('angular/firstTest');
+});
+
+Route::get('/responseTest', 'TestController@index');
+
+Route::get('/go', 'TestController@teststore');
+
+Route::get('/show', 'TestController@indexNew');
+
+Route::any('{catchall}', function() {
+    //some code
+})->where('catchall', '.*');
