@@ -1,5 +1,5 @@
 var app = angular
-            .module("contacts", [], function($locationProvider){
+            .module("contacts", ['ui.bootstrap'], function($locationProvider){
                 $locationProvider.html5Mode({
                     enabled: true,
                     requireBase: false
@@ -7,45 +7,53 @@ var app = angular
             })
             .factory('contactHandler', function($http) {
                 return {
-                    saveContact: function($contactData) {
-                        document.getElementById("message").textContent = "";
+                    saveContact: function($contactData, id) {
+                        var method;
+                        if (parseInt(id)){
+                            method = "PUT";
+                            url = "/api/contact/" + id;
+                        }else {
+                            method = "POST";
+                            url = "/api/contact";
+                        }
+
                         var request = $http({
-                            method: "POST",
-                            url: "api/contact",
+                            method: method,
+                            url: url,
                             data: {
-                                name: $contactData.name,
-                                surname: $contactData.surname,
-                                telephone: $contactData.telephone,
-                                text: $contactData.text,
-                                birthday: $contactData.birthday
+                                contact_name: $contactData.name,
+                                contact_surname: $contactData.surname,
+                                contact_telephone: $contactData.telephone,
+                                contact_text: $contactData.text,
+                                contact_birthday: $contactData.birthday
                             }
                         });
 
-                        request.success(function (data) {
-                            document.getElementById("message").textContent = "You have login successfully with email " + data;
-                            $http.get("api/contact").then(function(response) {
-                                $contactData.myData = response.data
-                            });
-                        });
-                        request.error(function (data) {
-                            console.log(data);
-                            document.getElementById("message").textContent = "Error " + data;
-                        });
-
-                        return $contactData;
+                        return request;
                     }
                 };
             })
-            .controller('contactsController', function($scope, $http, contactHandler) {
-                $http.get("api/contact").then(function(response) {
-                    $scope.myData = response.data;
-                });
+            .controller('contactsController', function($scope, $http, $uibModal) {
+                $scope.init = function() {
+                    $http.get("/api/contact").then(function(response) {
+                        $scope.myData = response.data;
+                        if($scope.modalInstance) {
+                            $scope.cancel();
+                        }
+                    });
+                };
 
-                $('#birthdayPicker').datetimepicker({
-                    format: 'DD/MM/YYYY'
-                }).on('dp.change', function(newDate) {
-                    $scope.birthday = newDate.date.format("YYYY-MM-DD");
-                });
+                $scope.createContact = function () {
+                    $scope.modalInstance = $uibModal.open({
+                        templateUrl: 'createContact.html',
+                        controller: 'CreateNewContact',
+                        scope: $scope
+                    });
+                };
+
+                $scope.cancel = function () {
+                    $scope.modalInstance.close();
+                };
 
                 $scope.setBackGround = function(contactBirthday) {
                     var now = new Date();
@@ -55,88 +63,69 @@ var app = angular
                     if(diff < 0){
                         if(diff >= -10 && diff < -5){
                             color = '#faf2cc';
-                        }else if(diff > -5){
+                        } else if(diff > -5){
                             color = '#ebcccc';
                         }
                     }
                     return color;
                 };
+            })
+            .controller('CreateNewContact', function($scope, $http, contactHandler) {
+                angular.element(document).ready(function () {
+                    $('#birthdayPicker').datetimepicker({
+                        format: 'DD/MM/YYYY'
+                    }).on('dp.change', function(newDate) {
+                        $scope.birthday = newDate.date.format("YYYY-MM-DD");
+                    });
+                });
 
                 $scope.save = function () {
-                    $scope = contactHandler.saveContact($scope);
+                    var save = contactHandler.saveContact($scope);
+                    save.then(function successCallback() {
+                        $scope.errorData = null;
+                        $scope.init();
+                    }, function errorCallback(response) {
+                        if(response.status === 422){
+                            $scope.errorData = response.data;
+                        } else {
+                            document.getElementById("message").textContent = "Something went wrong";
+                        }
+                    });
                 }
             })
-            .controller('EditContactController', function($scope, $http, $location) {
-                var url = $location.url();
-                var id = url.substr(url.length - 1);
+            .controller('EditContactController', function($scope, $http, $location, contactHandler) {
+                var id = $location.url().split("/")[2]||"Unknown";
+
+                $('#birthdayPicker').datetimepicker({
+                    format: 'DD/MM/YYYY'
+                }).on('dp.change', function(newDate) {
+                    $scope.birthday = newDate.date.format("YYYY-MM-DD");
+                });
 
                 $http.get("/api/contact/" + id).then(function(response) {
-                    console.log("api/contact/" + id);
-                    console.log(response);
                     $scope.name = response.data.contact_name;
                     $scope.surname = response.data.contact_surname;
                     $scope.telephone = response.data.contact_telephone;
                     $scope.text = response.data.contact_text;
                     $scope.birthday = response.data.contact_birthday;
-                    //console.log($scope.name);
-                    //$scope.myData = response.data
                 });
 
-/*                var request = $http({
-                    method: "GET",
-                    url: "/api/contact/" + id,
-                    data: {
-                        contact: id
-                    }
+                $scope.save = function (){
+                    var save = contactHandler.saveContact($scope, id);
+                    save.then(function successCallback(response) {
+                        document.getElementById("message").textContent = "The contact has been successfully created";
+                        $scope.errorData = null;
+                    }, function errorCallback(response) {
+                        if(response.status === 422){
+                            $scope.errorData = response.data;
 
-                });*/
-/*                request.success(function (data) {
-                    console.log('YES');
-                });
-                request.error(function (data) {
-                    console.log("NO");
-                });*/
-
-        /*get("api/contact/contact").then(function(response) {
-                console.log("api/contact/" + id);
-                console.log(response);
-                $scope.myData = response.data;
-
-            });
-
-            $('#birthdayPicker').datetimepicker({
-                format: 'DD/MM/YYYY'
-            }).on('dp.change', function(newDate) {
-            $scope.birthday = newDate.date.format("YYYY-MM-DD");
-            });*/
-
-/*        $scope.save = function () {
-            document.getElementById("message").textContent = "";
-            var request = $http({
-                method: "POST",
-                url: "api",
-                data: {
-                    name: $scope.name,
-                    surname: $scope.surname,
-                    telephone: $scope.telephone,
-                    text: $scope.text,
-                    birthday: $scope.birthday
+                        }
+                        else {
+                            document.getElementById("message").textContent = "Something went wrong";
+                        }
+                    });
                 }
             });
-
-            request.success(function (data) {
-                document.getElementById("message").textContent = "You have login successfully with email " + data;
-
-                $http.get("api").then(function(response) {
-                    $scope.myData = response.data
-                });
-            });
-            request.error(function (data) {
-                console.log(data);
-                document.getElementById("message").textContent = "Error " + data;
-            });
-        }*/
-    });
 
 
 

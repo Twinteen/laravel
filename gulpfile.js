@@ -19,6 +19,7 @@ elixir(function(mix) {
                  '../../../bower_components/angular/angular.js',
                  '../../../bower_components/jquery/dist/jquery.js',
                  '../../../bower_components/bootstrap/dist/js/bootstrap.js',
+                 '../../../bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
                  '../../../bower_components/moment/moment.js',
                  '../../../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
                  'app.js'], 'public/js/app.js');//
