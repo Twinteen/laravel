@@ -1,71 +1,41 @@
-/*var myApp = angular.module('myApp', []);*/
+var myApp = angular.module('myApp', []);
 
-/*var myController = function ($scope) {
+myApp.config(['$interpolateProvider',
+
+    function($interpolateProvider) {
+        $interpolateProvider.startSymbol('<%');
+        $interpolateProvider.endSymbol('%>');
+    }
+]);
+
+var myController = function ($scope) {
     $scope.message = "Hello world";
 
 };
 
-myApp.controller("myController", myController);*/
+myApp.controller("myController", myController);
 
-var app = angular
-            .module("myModule", [])
-            .controller("newController", function ($scope){
-                var employees = [
-                    { firstName: "Ben", lastName: "Gur" },
-                    { firstName: "John", lastName: "Manson" }
-                ];
+var app = angular.module('request', []);
 
-                $scope.employees = employees;
-            })
-            .controller("myController", function ($scope) {
-                $scope.message = "Hello world"
+app.config(['$interpolateProvider',
 
-            })
-            .controller('customersCtrl', function($scope, $http) {
-                $http.get("api").then(function(response) {
-                    $scope.myData = response.data;
-                });
-            })
-            .controller('FormController',  function($scope) {
-                var contact = {
-                    firstName: "",
-                    lastName: "",
-                    telephone: "",
-                    text: "",
-                    birthday: ""
-                };
+    function($interpolateProvider) {
+        $interpolateProvider.startSymbol('<%');
+        $interpolateProvider.endSymbol('%>');
+    }
+]);
 
-                $scope.contact = contact;
-            })
-            .controller('createController', function ($scope, $http) {
-                $scope.save = function () {
+var requestController = function ($scope, $http) {
+    $scope.message = $http.get('api').
+    success(function(data, status, headers, config) {
+        $scope.posts = data;
+    }).
+    error(function(data, status, headers, config) {
+        // log error
+    });
+};
 
-                    document.getElementById("message").textContent = "";
-
-                    var request = $http({
-                        method: "POST",
-                        url: "api",
-                        data: {
-                            name: $scope.name,
-                            surname: $scope.surname,
-                            telephone: $scope.telephone,
-                            text: $scope.text,
-                            birthday: $scope.birthday
-                        }
-                        //headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                    });
-
-                    /* Check whether the HTTP Request is successful or not. */
-                    request.success(function (data) {
-                        document.getElementById("message").textContent = "You have login successfully with email " + data;
-                    });
-                    request.error(function (data) {
-                        console.log(data);
-                        document.getElementById("message").textContent = "Error " + data;
-                    });
-                }
-            });
-
+app.controller("requestController", requestController);
 
 
 
