@@ -22,25 +22,6 @@ class TestController extends Controller
         return response()->json($contacts);
     }
 
-    public function indexNew()
-    {
-        $contacts = Test::all();
-        return $contacts;
-    }
-
-    public function select($id)
-    {
-        $contact = Test::find($id);
-        if (!empty($contact)) {
-            $data = [
-                'contact' => $contact
-            ];
-            return view('contact', $data);
-        }
-
-        return redirect('/');
-    }
-
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -65,6 +46,16 @@ class TestController extends Controller
         /*Test::create(Request::all());
         return response()->json('Yep');*/
         //
+    }
+
+    public function show($contact)
+    {
+        $contact = Test::find($contact);
+        if (!empty($contact)) {
+            return response()->json($contact);
+        }
+
+        return response()->json(false);
     }
 
     public function teststore(Request $request)
@@ -120,37 +111,5 @@ class TestController extends Controller
 
     }*/
 
-/*    public function rules(Request $request)
-    {
-        $user = User::find($this->re);
 
-        switch($this->method())
-        {
-            case 'GET':
-            case 'DELETE':
-            {
-                return [];
-            }
-            case 'POST':
-            {
-                return [
-                    'user.name.first' => 'required',
-                    'user.name.last'  => 'required',
-                    'user.email'      => 'required|email|unique:users,email',
-                    'user.password'   => 'required|confirmed',
-                ];
-            }
-            case 'PUT':
-            case 'PATCH':
-            {
-                return [
-                    'user.name.first' => 'required',
-                    'user.name.last'  => 'required',
-                    'user.email'      => 'required|email|unique:users,email,'.$user->id,
-                    'user.password'   => 'required|confirmed',
-                ];
-            }
-            default:break;
-        }
-    }*/
 }

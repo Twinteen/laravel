@@ -17,7 +17,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');*/
 
-Route::resource('/', 'TestController',
-    array('only' => ['store', 'index']));
-Route::resource('/update', 'TestController',
-    array('only' => ['update']));
+Route::resource('/contact', 'TestController',
+    array('only' => ['store', 'index', 'update', 'show']));
+

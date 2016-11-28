@@ -17,8 +17,9 @@ require('laravel-elixir-vue-2');
 elixir(function(mix) {
     mix.scripts([
                  '../../../bower_components/angular/angular.js',
-                 '../../../bower_components/moment/moment.js',
                  '../../../bower_components/jquery/dist/jquery.js',
                  '../../../bower_components/bootstrap/dist/js/bootstrap.js',
-                 'app.js'], 'public/js/app.js');
+                 '../../../bower_components/moment/moment.js',
+                 '../../../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+                 'app.js'], 'public/js/app.js');//
 });

@@ -11,24 +11,24 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
+});*/
+
+Route::get('/', function () {
+    Blade::setContentTags('<%', '%>');
+    Blade::setEscapedContentTags('<%%', '%%>');
+    return View::make('contacts');
 });
 
-Route::get('/testAngular', function () {
+Route::get('/contact/{id}', function () {
     Blade::setContentTags('<%', '%>');        // for variables and all things Blade
     Blade::setEscapedContentTags('<%%', '%%>');   // for escaped data
-    return View::make('contacts');
-    //return View::make('angular/firstTest');
-    //return view('angular/firstTest');
+    return View::make('contact');
 });
 
-Route::get('/responseTest', 'TestController@index');
+/*Route::get('/responseTest', 'TestController@index');
 
 Route::get('/go', 'TestController@teststore');
 
-Route::get('/show', 'TestController@indexNew');
-
-Route::any('{catchall}', function() {
-    //some code
-})->where('catchall', '.*');
+Route::get('/show', 'TestController@indexNew');*/
