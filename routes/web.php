@@ -16,7 +16,10 @@ Route::get('/', function () {
 });
 
 Route::get('/testAngular', function () {
-    return view('angular/firstTest');
+    Blade::setContentTags('<%', '%>');        // for variables and all things Blade
+    Blade::setEscapedContentTags('<%%', '%%>');   // for escaped data
+    return View::make('angular/firstTest');
+    //return view('angular/firstTest');
 });
 
 Route::get('/responseTest', 'TestController@index');
