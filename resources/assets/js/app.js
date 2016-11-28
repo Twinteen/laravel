@@ -9,35 +9,35 @@ myApp.controller("myController", myController);*/
 
 var app = angular
             .module("myModule", [])
-            .controller("newController", function ($scope){
-                var employees = [
-                    { firstName: "Ben", lastName: "Gur" },
-                    { firstName: "John", lastName: "Manson" }
-                ];
-
-                $scope.employees = employees;
-            })
-            .controller("myController", function ($scope) {
-                $scope.message = "Hello world"
-
-            })
             .controller('customersCtrl', function($scope, $http) {
                 $http.get("api").then(function(response) {
                     $scope.myData = response.data;
                 });
-            })
-            .controller('FormController',  function($scope) {
-                var contact = {
-                    firstName: "",
-                    lastName: "",
-                    telephone: "",
-                    text: "",
-                    birthday: ""
-                };
 
-                $scope.contact = contact;
-            })
-            .controller('createController', function ($scope, $http) {
+                $scope.setBackGround = function(contactBirthday) {
+                    var now = new Date();
+                    var birthday = contactBirthday.split("-");
+                    if(parseInt(birthday[1]) == 12 && parseInt(birthday[2]) >= 21) {
+                        birthday[0] = parseInt(now.getFullYear()) + 1;
+                    }
+                    else {
+                        birthday[0] = parseInt(now.getFullYear());
+                    }
+
+                    var newBd = new Date(parseInt(birthday[1]) + "/" + birthday[2] + "/" + birthday[0]);
+                    var diff = parseInt(newBd.getTime() - new Date().getTime())/86400000;
+                    var color = null;
+                    if(diff > 0) {
+                        if(diff <= 10 && diff > 5) {
+                            color = '#faf2cc';
+                        } else if(diff <= 5) {
+                            color = '#ebcccc';
+                        }
+                    }
+
+                    return color;
+                }
+
                 $scope.save = function () {
 
                     document.getElementById("message").textContent = "";
@@ -58,6 +58,10 @@ var app = angular
                     /* Check whether the HTTP Request is successful or not. */
                     request.success(function (data) {
                         document.getElementById("message").textContent = "You have login successfully with email " + data;
+
+                        $http.get("api").then(function(response) {
+                            $scope.myData = response.data
+                        });
                     });
                     request.error(function (data) {
                         console.log(data);

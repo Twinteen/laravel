@@ -3,29 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>AngularTest</title>
-    <link type="text/css" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-<body ng-app="myModule">
-<div ng-controller="myController">
-    {{ message }}
-</div>
-
+<body ng-app="myModule" ng-controller="customersCtrl">
 <div>
-    <table ng-controller="newController">
-        <tr>
-            <th>First name</th>
-            <th>Last name</th>
-                    </tr>
-        <tr ng-repeat="employee in employees">
-            <td>{{ employee.firstName }}</td>
-            <td>{{ employee.lastName }}</td>
-        </tr>
-    </table>
-</div>
-
-<div>
-    <form name="myForm" ng-controller="createController" class="my-form">
+    <form name="myForm" class="my-form">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" ng-model="name">
         <label for="surname">Surname</label>
@@ -40,7 +22,7 @@
         <span id="message"></span>
     </form>
 </div>
-<div ng-controller="customersCtrl">
+<div>
     <table>
         <tr>
             <th>First name</th>
@@ -49,7 +31,7 @@
             <th>Text</th>
             <th>Birthday</th>
         </tr>
-        <tr ng-repeat="contact in myData">
+        <tr ng-repeat="contact in myData" ng-style="{'background-color': '{{ setBackGroundImage(contact.contact_birthday) }}'}">
             <td>{{ contact.contact_name }}</td>
             <td>{{ contact.contact_surname }}</td>
             <td>{{ contact.contact_telephone }}</td>
