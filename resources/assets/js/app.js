@@ -113,12 +113,13 @@ var app = angular
                 $scope.save = function (){
                     var save = contactHandler.saveContact($scope, id);
                     save.then(function successCallback(response) {
-                        document.getElementById("message").textContent = "The contact has been successfully created";
+                        $scope.message = "The contact has been successfully updated";
+                        document.getElementById("message").textContent = $scope.message;
                         $scope.errorData = null;
                     }, function errorCallback(response) {
                         if(response.status === 422){
                             $scope.errorData = response.data;
-
+                            document.getElementById("message").textContent = "";
                         }
                         else {
                             document.getElementById("message").textContent = "Something went wrong";

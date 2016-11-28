@@ -56551,8 +56551,6 @@ var app = angular
                     $http.get("/api/contact").then(function(response) {
                         $scope.myData = response.data;
                         if($scope.modalInstance) {
-                            document.getElementById("message").textContent = "The contact has been successfully created";
-                            console.log(document.getElementById("message").textContent);
                             $scope.cancel();
                         }
                     });
@@ -56599,11 +56597,9 @@ var app = angular
                     save.then(function successCallback() {
                         $scope.errorData = null;
                         $scope.init();
-                        document.getElementById("message").textContent = "The contact has been successfully created";
                     }, function errorCallback(response) {
                         if(response.status === 422){
                             $scope.errorData = response.data;
-                            console.log(response.data);
                         } else {
                             document.getElementById("message").textContent = "Something went wrong";
                         }
@@ -56620,8 +56616,6 @@ var app = angular
                 });
 
                 $http.get("/api/contact/" + id).then(function(response) {
-                    console.log(response);
-                    console.log("/api/contact/" + id);
                     $scope.name = response.data.contact_name;
                     $scope.surname = response.data.contact_surname;
                     $scope.telephone = response.data.contact_telephone;
@@ -56632,11 +56626,13 @@ var app = angular
                 $scope.save = function (){
                     var save = contactHandler.saveContact($scope, id);
                     save.then(function successCallback(response) {
+                        $scope.message = "The contact has been successfully updated";
+                        document.getElementById("message").textContent = $scope.message;
                         $scope.errorData = null;
                     }, function errorCallback(response) {
                         if(response.status === 422){
                             $scope.errorData = response.data;
-                            console.log(response.data);
+                            document.getElementById("message").textContent = "";
                         }
                         else {
                             document.getElementById("message").textContent = "Something went wrong";

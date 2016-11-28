@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Nick
- * Date: 11/28/2016
- * Time: 5:45 AM
- */
+
 namespace database\seeds;
 
 use Illuminate\Database\Seeder;
+use App\Contact;
+use Illuminate\Support\Facades\DB;
+
 
 class ContactSeeder extends Seeder
 {
